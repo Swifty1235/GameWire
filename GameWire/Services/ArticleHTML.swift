@@ -3,7 +3,8 @@ import Foundation
 /// Builds the HTML page the article reader shows: GameWire's own styling around the
 /// article HTML from the feed, so headings, lists, tables, images and videos all render.
 enum ArticleHTML {
-    static func page(for item: NewsItem) -> String {
+    /// `logoSource` is the source's logo as an image URL or data: URL (shown next to its name).
+    static func page(for item: NewsItem, logoSource: String? = nil) -> String {
         let body = clean(item.articleHTML ?? "<p>\(escape(item.summary))</p>")
 
         var hero = ""
@@ -25,7 +26,7 @@ enum ArticleHTML {
         <style>\(css)</style>
         </head>
         <body>
-        <div class="meta"><strong>\(escape(item.displayName))</strong> · \(escape(item.subtitleLine))</div>
+        <div class="meta">\(logoSource.map { "<img class=\"source-logo\" src=\"\(escape($0))\" alt=\"\">" } ?? "")<span><strong>\(escape(item.displayName))</strong> · \(escape(item.subtitleLine))</span></div>
         <div class="kind">\(escape(item.kindLine))</div>
         <h1 class="title">\(escape(item.title))</h1>
         \(hero)
@@ -318,9 +319,19 @@ enum ArticleHTML {
       padding: 12px 16px 48px;
       overflow-wrap: break-word;
     }
-    .meta { font: -apple-system-subheadline; color: var(--secondary); }
+    .meta { font: -apple-system-subheadline; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
+    .meta img.source-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      object-fit: contain;
+      background: #fff;
+      border: 0.5px solid var(--separator);
+      margin: 0;
+      flex: none;
+    }
     .meta strong { color: var(--text); }
-    .kind { font: -apple-system-caption1; color: var(--secondary); margin-top: 10px; }
+    .kind { font: -apple-system-caption1; font-weight: 500; color: var(--accent); margin-top: 10px; }
     h1.title { font: -apple-system-title1; font-weight: 700; line-height: 1.2; margin: 4px 0 16px; }
     h1, h2, h3, h4, h5, h6 { line-height: 1.25; margin: 1.4em 0 0.5em; }
     h2 { font-size: 1.3em; }
@@ -398,6 +409,11 @@ enum ArticleHTML {
     p:empty { margin: 0; height: 0.5em; }
     p:empty + p:empty { display: none; }
     figure { margin: 1.2em 0; }
+    /* PC Gamer reserves each image's height with padding-top and pins the image on top using its own
+       CSS. Without that CSS the padding becomes a blank gap above every image, so drop it. */
+    p.vanilla-image-block { padding-top: 0 !important; margin: 0; }
+    /* Fixed-height boxes saved for widgets we don't load (quizzes etc.) would otherwise stay blank. */
+    article [style*="min-height"] { min-height: 0 !important; }
     figcaption, small, .caption { font: -apple-system-footnote; color: var(--secondary); margin-top: 6px; display: block; }
     /* Social posts: let the platform's own card styling show once it loads. */
     .twitter-tweet-rendered, .instagram-media-rendered, .bluesky-embed, .tiktok-embed { margin: 1.2em auto !important; }

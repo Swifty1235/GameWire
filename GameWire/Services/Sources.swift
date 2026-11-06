@@ -4,37 +4,30 @@ import Foundation
 struct Outlet: Hashable, Sendable {
     let name: String
     let feedURL: URL
+    /// Logo image in Assets.xcassets/Logos.
+    let logo: String
 }
 
-/// A game we pull official news / patch notes for from Steam.
-struct SteamGame: Hashable, Sendable {
-    let name: String
-    let appID: Int
-
-    var headerImageURL: URL {
-        URL(string: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/\(appID)/header.jpg")!
-    }
-}
-
-/// What the feed follows until onboarding / "follow" exists.
+/// The news sites every feed uses (picking sites comes later), and popular games to discover.
 enum DefaultFollows {
     static let outlets: [Outlet] = [
-        Outlet(name: "IGN", feedURL: URL(string: "https://feeds.feedburner.com/ign/all")!),
-        Outlet(name: "GameSpot", feedURL: URL(string: "https://www.gamespot.com/feeds/mashup/")!),
-        Outlet(name: "Polygon", feedURL: URL(string: "https://www.polygon.com/rss/index.xml")!),
-        Outlet(name: "Kotaku", feedURL: URL(string: "https://kotaku.com/rss")!),
-        Outlet(name: "Eurogamer", feedURL: URL(string: "https://www.eurogamer.net/feed")!),
-        Outlet(name: "PC Gamer", feedURL: URL(string: "https://www.pcgamer.com/rss/")!),
-        Outlet(name: "Rock Paper Shotgun", feedURL: URL(string: "https://www.rockpapershotgun.com/feed")!),
-        Outlet(name: "VG247", feedURL: URL(string: "https://www.vg247.com/feed")!),
+        Outlet(name: "IGN", feedURL: URL(string: "https://feeds.feedburner.com/ign/all")!, logo: "logo-ign"),
+        Outlet(name: "GameSpot", feedURL: URL(string: "https://www.gamespot.com/feeds/mashup/")!, logo: "logo-gamespot"),
+        Outlet(name: "Polygon", feedURL: URL(string: "https://www.polygon.com/rss/index.xml")!, logo: "logo-polygon"),
+        Outlet(name: "Kotaku", feedURL: URL(string: "https://kotaku.com/rss")!, logo: "logo-kotaku"),
+        Outlet(name: "Eurogamer", feedURL: URL(string: "https://www.eurogamer.net/feed")!, logo: "logo-eurogamer"),
+        Outlet(name: "PC Gamer", feedURL: URL(string: "https://www.pcgamer.com/rss/")!, logo: "logo-pcgamer"),
+        Outlet(name: "Rock Paper Shotgun", feedURL: URL(string: "https://www.rockpapershotgun.com/feed")!, logo: "logo-rps"),
+        Outlet(name: "VG247", feedURL: URL(string: "https://www.vg247.com/feed")!, logo: "logo-vg247"),
     ]
 
-    static let games: [SteamGame] = [
-        SteamGame(name: "Helldivers 2", appID: 553850),
-        SteamGame(name: "Counter-Strike 2", appID: 730),
-        SteamGame(name: "Marvel Rivals", appID: 2767030),
-        SteamGame(name: "Baldur's Gate 3", appID: 1086940),
-        SteamGame(name: "Cyberpunk 2077", appID: 1091500),
-        SteamGame(name: "Elden Ring", appID: 1245620),
+    /// Shown in Discover even when not followed, and suggested in "Find games".
+    static let popularGames: [Game] = [
+        Game(name: "Helldivers 2", steamAppID: 553850),
+        Game(name: "Counter-Strike 2", steamAppID: 730, aliases: ["CS2"]),
+        Game(name: "Marvel Rivals", steamAppID: 2767030),
+        Game(name: "Baldur's Gate 3", steamAppID: 1086940, aliases: ["BG3"]),
+        Game(name: "Cyberpunk 2077", steamAppID: 1091500),
+        Game(name: "Elden Ring", steamAppID: 1245620),
     ]
 }

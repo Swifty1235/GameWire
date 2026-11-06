@@ -10,7 +10,16 @@ struct ArticleDetailView: View {
 
     init(item: NewsItem) {
         self.item = item
-        self.html = ArticleHTML.page(for: item)
+        self.html = ArticleHTML.page(for: item, logoSource: Self.logoSource(for: item))
+    }
+
+    /// The source logo for the article header. Bundled logos are embedded as data, since the
+    /// web view can't read files from the app.
+    private static func logoSource(for item: NewsItem) -> String? {
+        if let asset = item.logoAsset, let png = UIImage(named: asset)?.pngData() {
+            return "data:image/png;base64,\(png.base64EncodedString())"
+        }
+        return item.logoURL?.absoluteString
     }
 
     var body: some View {

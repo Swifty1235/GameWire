@@ -7,7 +7,7 @@ struct ContentView: View {
                 HomeView()
             }
             Tab("My Games", systemImage: "gamecontroller") {
-                ComingSoonView(title: "My Games", systemImage: "gamecontroller")
+                MyGamesView()
             }
             Tab("Releases", systemImage: "calendar") {
                 ComingSoonView(title: "Releases", systemImage: "calendar")
@@ -31,4 +31,5 @@ struct ComingSoonView: View {
 
 #Preview {
     ContentView()
+        .environment(FollowStore())
 }

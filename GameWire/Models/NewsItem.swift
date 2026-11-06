@@ -67,6 +67,9 @@ struct NewsItem: Identifiable, Hashable {
     /// The full article as HTML, when the source gives us all of it (IGN, PC Gamer, GameSpot, Steam).
     /// nil for teaser-only sources, which open in the in-app browser instead.
     var articleHTML: String? = nil
+    /// Source logo: a bundled image for outlets, or a web image (Steam game icons).
+    var logoAsset: String? = nil
+    var logoURL: URL? = nil
 
     var hasFullText: Bool { articleHTML != nil }
 
